@@ -7,6 +7,7 @@ python ./server --directory serverstorage
 import socket
 import threading
 import argparse
+import config
 from variables import *
 from HTTPRequest import *
 from HTTPResponse import *
@@ -22,17 +23,11 @@ def handle_client(client_socket, addr):
     try:
         request = client_socket.recv(BUFFER_SIZE)
         Client_HTTPRequest = HTTPRequest(request.decode("utf-8"))
-        
+
         Server_HTTPResponse = Client_HTTPRequest.getResponse()
         client_socket.send(Server_HTTPResponse)
     finally:
         client_socket.close()
-
-
-ServerConfig = {
-    "Content-Encoding": ["gzip"],
-    "directory": "./"
-}
 
 
 def main():
@@ -43,7 +38,8 @@ def main():
     server_socket.bind((HOST, PORT))
     server_socket.listen(CONNECTION_BACKLOG)
 
-    ServerConfig["directory"] = args.directory or "./"
+    config.ServerConfig["directory"] = args.directory or "./"
+    print(config.ServerConfig["directory"])
 
     print("Listening for connections...")
 

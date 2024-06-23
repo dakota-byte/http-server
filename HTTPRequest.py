@@ -1,7 +1,7 @@
 import os
 import gzip
+import config
 from variables import *
-from server import ServerConfig
 from HTTPResponse import HTTPResponse
 
 
@@ -56,7 +56,7 @@ class HTTPRequest:
 
         if self.HTTP_METHOD == "GET" and self.REQUEST_TARGET.startswith("/files/"):
             file_name = self.REQUEST_TARGET[7:]
-            file_path = ServerConfig["directory"] + file_name
+            file_path = config.ServerConfig["directory"] + file_name
             if os.path.exists(file_path):
                 with open(file_path, "r") as f:
                     file_contents = f.read()
@@ -69,9 +69,10 @@ class HTTPRequest:
 
         if self.HTTP_METHOD == "POST" and self.REQUEST_TARGET.startswith("/files/"):
             file_name = self.REQUEST_TARGET[7:]
-            file_path = ServerConfig["directory"] + file_name
+            file_path = config.ServerConfig["directory"] + file_name
             # We are also given Content-Type and Content-Length
             try:
+                print(file_path)
                 with open(file_path, "w") as f:
                     f.write(self.BODY)
                 response.STATUS_LINE = HTTP_201
@@ -84,7 +85,7 @@ class HTTPRequest:
             )  # to avoid ", " vs ","
             selected_scheme = None
             for scheme in schemes:
-                if scheme in ServerConfig["Content-Encoding"]:
+                if scheme in config.ServerConfig["Content-Encoding"]:
                     selected_scheme = scheme
             if selected_scheme:
                 response.addHeader("Content-Encoding", selected_scheme)
