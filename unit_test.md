@@ -22,7 +22,9 @@ curl -v http://localhost:4221/user-agent -H "User-Agent: apple/mango-mango"
 
 (received x amount of times) "HTTP/1.1 200 OK\r\n\r\n"
 
-curl -v -X POST http://localhost:4221/files/pineapple_grape_grape_pineapple -H "Content-Length: 69" -H "Content-Type: application/octet-stream" -d 'blueberry blueberry orange mango raspberry blueberry banana blueberry'
+curl -v POST http://localhost:4221/files/pineapple_grape_grape_pineapple -H "Content-Length: 69" -H "Content-Type: application/octet-stream" -d 'blueberry blueberry orange mango raspberry blueberry banana blueberry'
+
+curl -v -X POST http://localhost:4221/files/pineapple_grape_grape_pineapple -H "ConteNt-LEngth:69" -H "Content-type :application/octet-stream" -d 'blueberry blueberry orange mango raspberry blueberry banana blueberry' (Testing case insensitivty)
 
 "HTTP/1.1 201 Created\r\n\r\n"
 
@@ -37,6 +39,15 @@ Content-Encoding: gzip
 Content-Type: text/plain
 Content-Length: 23
 
-1F 8B 08 00 00 00 00 00 // Hexadecimal representation of the response body
+1F 8B 08 00 00 00 00 00
 00 03 4B 4C 4A 06 00 C2
 41 24 35 03 00 00 00
+
+curl -v -H "Accept-Encoding: this-isnt-real-lol" http://localhost:4221/echo/abc
+
+HTTP/1.1 406 Not Acceptable
+Content-Type: text/plain
+
+curl -v -X HEAD http://localhost:4221/files/pineapple_grape_grape_pineapple
+
+"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: 69\r\n\r\n"

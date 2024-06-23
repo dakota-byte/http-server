@@ -24,4 +24,6 @@ this demonstrates a POST request to a HTTP server!
 
 ### Other features I've added as per RFC 2616 Hypertext Transfer Protocol -- HTTP/1.1:
 
-- N/A
+- Case insensitivity
+- HEAD method
+- "406 Not Acceptable" status code

@@ -13,3 +13,4 @@ HTTP Server Responses
 HTTP_200 = "HTTP/1.1 200 OK"
 HTTP_201 = "HTTP/1.1 201 Created"
 HTTP_404 = "HTTP/1.1 404 Not Found"
+HTTP_406 = "HTTP/1.1 406 Not Acceptable"
