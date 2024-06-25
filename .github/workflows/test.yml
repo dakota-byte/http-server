@@ -30,7 +30,6 @@ jobs:
         cat <<EOF > expected.txt
         HTTP/1.1 200 OK
 
-
         EOF
         if ! diff response.txt expected.txt; then
           echo "Test failed!"
