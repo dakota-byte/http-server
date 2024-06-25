@@ -1,0 +1,38 @@
+name: Run HTTP Server Tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Start HTTP Server
+      run: |
+        python server.py --directory ./store/
+      shell: bash
+
+    - name: Wait for server to start
+      run: |
+        sleep 5
+
+    - name: Run tests
+      run: |
+        response=$(curl -v http://localhost:4221/)
+        expected=""HTTP/1.1 200 OK\r\n\r\n""
+        if [ "$response" != "$expected" ]; then
+          echo "Test failed!"
+          exit 1
+        fi

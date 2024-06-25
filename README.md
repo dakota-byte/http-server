@@ -4,6 +4,8 @@ A simple HTTP server written in python. This was originally written following al
 
 ### Testing
 
+This repo is running automated tests with github workflow. You can view those logs, or you can test it out yourself!
+
 To test it out, try running the following:
 
 `python server.py --direction ./store/`
@@ -24,6 +26,7 @@ this demonstrates a POST request to a HTTP server!
 
 ### Other features I've added as per RFC 2616 Hypertext Transfer Protocol -- HTTP/1.1:
 
+- automated tests (not in the RFC but I think it's cool)
 - Case insensitivity
 - HEAD method
-- "406 Not Acceptable" status code
+- "406 Not Acceptable" status code, for unrecognized compression

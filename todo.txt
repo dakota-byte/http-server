@@ -1,0 +1,8 @@
+- implement proxy, gateway, and tunnel
+- caching, + validator
+- rule1 | rule2, (elem (foo | bar) elem), and other rules
+- the server must parse all 3 Full Date formats (3.3.1) but must send as RFC 1123 (GMT,UTC MUST)
+- OPTIONS, PUT, DELETE, TRACE, CONNECT, 405 Method Not Allowed, 501 Not Implemented
+- All headers from section 14
+- as many status codes as i can
+- PIPELINING??
