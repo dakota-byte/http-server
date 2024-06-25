@@ -28,7 +28,7 @@ jobs:
       run: |
         response=$(curl -si http://localhost:4221/ --output response.raw)
         printf "HTTP/1.1 200 OK\r\n\r\n" > expected.raw
-        if ! diff response.txt expected.txt; then
+        if ! diff response.raw expected.raw; then
           echo "Test failed!"
           exit 1
         fi
