@@ -81,7 +81,6 @@ class HTTPRequest:
             file_path = config.ServerConfig["directory"] + file_name
             # We are also given Content-Type and Content-Length
             try:
-                print(file_path)
                 with open(file_path, "w") as f:
                     f.write(self.BODY)
                 response.STATUS_LINE = HTTP_201
