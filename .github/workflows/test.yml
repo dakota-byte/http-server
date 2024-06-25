@@ -90,7 +90,7 @@ jobs:
       run: |
         curl --output response0.raw -si -H "Accept-Encoding: gzip" http://localhost:4221/echo/abc
         head -n 5 response0.raw > response.raw
-        printf "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 3\r\n\r\n" > expected.raw
+        printf "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 23\r\nContent-Encoding: gzip\r\n\r\n" > expected.raw
         if ! diff response.raw expected.raw; then
         echo "Test failed!"
         fi
