@@ -1,6 +1,6 @@
 # http-server
 
-A simple HTTP server written in python. This was originally written following along [CodeCrafters](https://app.codecrafters.io/courses/http-server/introduction) "Build your own HTTP server" challenge. 
+A simple multi-threaded HTTP server written in python. This was originally written following along [CodeCrafters](https://app.codecrafters.io/courses/http-server/introduction) "Build your own HTTP server" challenge. 
 
 ### Testing
 
