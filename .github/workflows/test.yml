@@ -86,6 +86,16 @@ jobs:
         exit 1
         fi
 
+    - name: HEAD a file
+      run: |
+        curl -sI http://localhost:4221/files/pineapple_grape_grape_pineapple \
+        --output response.raw 
+        printf "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: 69\r\n\r\n" > expected.raw
+        if ! diff response.raw expected.raw; then
+        echo "Test failed!"
+        exit 1
+        fi
+
     - name: gzip test 1/2
       run: |
         curl --output response0.raw -si -H "Accept-Encoding: gzip" http://localhost:4221/echo/abc
@@ -104,15 +114,6 @@ jobs:
         curl --output response0.raw -si -H "Accept-Encoding: this-isnt-real-lol" http://localhost:4221/echo/abc
         head -n 1 response0.raw > response.raw
         printf "HTTP/1.1 406 Not Acceptable\r\n" > expected.raw # as long as 406 is there
-        if ! diff response.raw expected.raw; then
-        echo "Test failed!"
-        exit 1
-        fi
-
-    - name: HEAD a file
-      run: |
-        response=$(curl --output response.raw -si -X HEAD http://localhost:4221/files/pineapple_grape_grape_pineapple)
-        printf "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: 69\r\n\r\n" > expected.raw
         if ! diff response.raw expected.raw; then
         echo "Test failed!"
         exit 1
