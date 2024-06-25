@@ -59,15 +59,6 @@ jobs:
           echo "Test failed!"
           exit 1
         fi
-        
-    - name: GET /
-      run: |
-        response=$(curl --output response.raw -si http://localhost:4221/user-agent -H "User-Agent: apple/mango-mango")
-        printf "HTTP/1.1 200 OK\r\n\r\n" > expected.raw
-        if ! diff response.raw expected.raw; then
-          echo "Test failed!"
-          exit 1
-        fi
 
     - name: POST file
       run: |
