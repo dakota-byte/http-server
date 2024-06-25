@@ -78,7 +78,7 @@ jobs:
         curl -si -X POST http://localhost:4221/files/pineapple_grape_grape_pineapple \
         -H "ConteNt-LEngth:69" \
         -H "Content-type :application/octet-stream" \
-        -d 'blueberry blueberry orange mango raspberry blueberry banana blueberry'
+        -d 'blueberry blueberry orange mango raspberry blueberry banana blueberry' \
         --output response.raw
         printf "HTTP/1.1 201 Created\r\n\r\n" > expected.raw
         if ! diff response.raw expected.raw; then
