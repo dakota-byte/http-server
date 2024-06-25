@@ -4,7 +4,7 @@ A simple HTTP server written in python. This was originally written following al
 
 ### Testing
 
-This repo is running automated tests with github workflow. You can view those logs, or you can test it out yourself!
+This repo is running automated tests with github workflow (assuming port 4221). You can view those logs, or you can test it out yourself!
 
 To test it out, try running the following:
 
@@ -12,7 +12,7 @@ To test it out, try running the following:
 
 and in another terminal
 
-`curl -v POST http://localhost:4221/files/test -H "Content-Length: 5" -H "Content-Type: application/octet-stream" -d 'hello'`
+`curl -si POST http://localhost:4221/files/test -H "Content-Length: 5" -H "Content-Type: application/octet-stream" -d 'hello'`
 
 this demonstrates a POST request to a HTTP server!
 

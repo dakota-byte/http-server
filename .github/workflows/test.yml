@@ -28,11 +28,107 @@ jobs:
       run: |
         sleep 5
 
-    - name: Run tests
+    - name: GET /
       run: |
-        response=$(curl -v http://localhost:4221/)
+        response=$(curl -si http://localhost:4221/)
         expected="HTTP/1.1 200 OK\r\n\r\n"
         if [ "$response" != "$expected" ]; then
           echo "Test failed!"
           exit 1
         fi
+
+    - name: GET non-existent
+      run: |
+        response=$(curl -si http://localhost:4221/non-existent)
+        expected="HTTP/1.1 404 Not Found\r\n\r\n"
+        if [ "$response" != "$expected" ]; then
+          echo "Test failed!"
+          exit 1
+        fi
+
+    - name: ECHO strawberry
+      run: |
+        response=$(curl -v http://localhost:4221/echo/strawberry)
+        expected="HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 10\r\n\r\nstrawberry"
+        if [ "$response" != "$expected" ]; then
+          echo "Test failed!"
+          exit 1
+        fi
+
+    - name: GET user-agent
+      run: |
+        response=$(curl -v http://localhost:4221/user-agent -H "User-Agent: apple/mango-mango")
+        expected="HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 17\r\n\r\napple/mango-mango"
+        if [ "$response" != "$expected" ]; then
+          echo "Test failed!"
+          exit 1
+        fi
+        
+    - name: GET /
+      run: |
+        response=$(curl -v http://localhost:4221/user-agent -H "User-Agent: apple/mango-mango")
+        expected="HTTP/1.1 200 OK\r\n\r\n"
+        if [ "$response" != "$expected" ]; then
+          echo "Test failed!"
+          exit 1
+        fi
+
+    - name: POST file
+      run: |
+        response=$(curl -v POST http://localhost:4221/files/pineapple_grape_grape_pineapple -H "Content-Length: 69" -H "Content-Type: application/octet-stream" -d 'blueberry blueberry orange mango raspberry blueberry banana blueberry')
+        expected="HTTP/1.1 201 Created\r\n\r\n"
+        if [ "$response" != "$expected" ]; then
+          echo "Test failed!"
+          exit 1
+        fi
+
+    - name: case insensitivity test
+      run: |
+        response=$(curl -v -X POST http://localhost:4221/files/pineapple_grape_grape_pineapple -H "ConteNt-LEngth:69" -H "Content-type :application/octet-stream" -d 'blueberry blueberry orange mango raspberry blueberry banana blueberry')
+        expected="HTTP/1.1 201 Created\r\n\r\n"
+        if [ "$response" != "$expected" ]; then
+        echo "Test failed!"
+        exit 1
+        fi
+
+    - name: gzip test 1/2
+      run: |
+        response=$(curl -si --output -H "Accept-Encoding: gzip" http://localhost:4221/echo/abc)
+        expected="HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 3\r\n\r\nabc"
+        if [ "$response" != "$expected" ]; then
+        echo "Test failed!"
+        exit 1
+        fi
+
+    - name: gzip test 2/2
+      run: |
+       curl --raw --output response.raw -H "Accept-Encoding: gzip" http://localhost:4221/echo/abc
+       sleep 1
+       response=$(xxd response.raw)
+       expected="1F8B08000000000000034B4C4A0600C241243503000000"
+       if [ "$response" != "$expected" ]; then
+       echo "Test failed!"
+       exit 1
+       fi
+
+    - name: Compression not known
+      run: |
+        response=$(curl -v -H "Accept-Encoding: this-isnt-real-lol" http://localhost:4221/echo/abc)
+        expected="HTTP/1.1 406 Not Acceptable\r\nContent-Type: text/plain\r\n\r\n"
+        if [ "$response" != "$expected" ]; then
+        echo "Test failed!"
+        exit 1
+        fi
+
+    - name: HEAD a file
+      run: |
+        response=$(curl -v -X HEAD http://localhost:4221/files/pineapple_grape_grape_pineapple)
+        expected="HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: 69\r\n\r\n"
+        if [ "$response" != "$expected" ]; then
+        echo "Test failed!"
+        exit 1
+        fi
+
+    - name: Test concurrent connections
+      run: |
+        seq 1 10 | xargs -n1 -P10 curl -s -o /dev/null -w "%{http_code} %{time_total}\n" http://localhost:4221/
