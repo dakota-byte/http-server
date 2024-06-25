@@ -21,7 +21,7 @@ jobs:
 
     - name: Start HTTP Server
       run: |
-        python server.py --directory ./store/
+        python server.py --directory ./store/ &
       shell: bash
 
     - name: Wait for server to start
