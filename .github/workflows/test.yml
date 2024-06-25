@@ -31,7 +31,7 @@ jobs:
     - name: Run tests
       run: |
         response=$(curl -v http://localhost:4221/)
-        expected=""HTTP/1.1 200 OK\r\n\r\n""
+        expected="HTTP/1.1 200 OK\r\n\r\n"
         if [ "$response" != "$expected" ]; then
           echo "Test failed!"
           exit 1
