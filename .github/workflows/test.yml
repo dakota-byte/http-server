@@ -15,6 +15,10 @@ jobs:
       with:
         python-version: '3.11'
 
+    - name: Install ApacheBench
+      run: |
+        sudo apt-get install -y apache2-utils
+
     - name: Start HTTP Server
       run: |
         python server.py --directory ./store/ &
@@ -32,6 +36,10 @@ jobs:
           echo "Test failed!"
           exit 1
         fi
+
+    - name: Test concurrent connections with ApacheBench
+      run: |
+         ab -n 100 -c 10 http://localhost:4221/
 
     - name: GET non-existent
       run: |
@@ -118,7 +126,3 @@ jobs:
         echo "Test failed!"
         exit 1
         fi
-
-    - name: Test concurrent connections
-      run: |
-        seq 1 10 | xargs -n1 -P10 curl -s -o /dev/null -w "%{http_code} %{time_total}\n" http://localhost:4221/
