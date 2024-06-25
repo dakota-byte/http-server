@@ -97,8 +97,9 @@ jobs:
 
     - name: gzip test 2/2
       run: |
-       curl --raw --output response.raw -H "Accept-Encoding: gzip" http://localhost:4221/echo/abc
-       printf "1F8B08000000000000034B4C4A0600C241243503000000" > expected.raw
+       curl --raw --output response0.raw -H "Accept-Encoding: gzip" http://localhost:4221/echo/abc
+       xxd response0.raw > response.raw
+       printf "00000000: 1f8b 0800 e92c 7a66 02ff 4b4c 4a06 00c2  .....,zf..KLJ...\n00000010: 4124 3503 0000 00                        A$5....\n" > expected.raw
        if ! diff response.raw expected.raw; then
        echo "Test failed!"
        exit 1
