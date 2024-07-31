@@ -44,7 +44,7 @@ def main():
     server_socket.bind((HOST, int(port)))
     server_socket.listen(CONNECTION_BACKLOG)
 
-    print("(Starting server) " + HOST + ":" + str(port))
+    print("(Starting server) " + HOST + ":" + str(port), "with PID", os.getpid())
     print("Managing resources in " + config.ServerConfig["directory"])
     print("Listening for connections...")
 
@@ -59,6 +59,7 @@ def main():
 
 def signal_handler(sig, frame):
     print("Exiting...")
+    os.kill(os.getpid(), signal.SIGTERM)
     sys.exit(0)
 
 # Set up signal handler for graceful shutdown
