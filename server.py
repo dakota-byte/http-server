@@ -4,9 +4,12 @@ Description: A simple HTTP Server
 python ./server --directory serverstorage
 """
 
+import signal
 import socket
+import sys
 import threading
 import argparse
+import time
 import config
 from variables import *
 from HTTPRequest import *
@@ -45,10 +48,21 @@ def main():
     print("Managing resources in " + config.ServerConfig["directory"])
     print("Listening for connections...")
 
-    while True:
-        client_socket, addr = server_socket.accept()
-        threading.Thread(target=handle_client, args=(client_socket, addr)).start()
+    server_socket.setblocking(False)  # Set the socket to non-blocking
 
+    while True:
+        try:
+            client_socket, addr = server_socket.accept()
+            threading.Thread(target=handle_client, args=(client_socket, addr)).start()
+        except BlockingIOError:
+            time.sleep(0.1)  # Sleep to prevent busy-waiting
+
+def signal_handler(sig, frame):
+    print("Exiting...")
+    sys.exit(0)
+
+# Set up signal handler for graceful shutdown
+signal.signal(signal.SIGINT, signal_handler)
 
 if __name__ == "__main__":
     main()
